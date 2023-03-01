@@ -1,1 +1,63 @@
 @use "./reboot";
+
+.accordion {
+  &__details {
+    width: 100%;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    height: fit-content;
+    container-type: inline-size;
+  }
+  &__summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    width: 100%;
+    cursor: pointer;
+  }
+  &__header {
+    &-item {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    &-text {
+      font-size: max(16px, 4cqw);
+      font-weight: bold;
+      display: none;
+    }
+  }
+  &__content {
+    overflow: hidden;
+    &__inner {
+      padding-top: 16px;
+      padding-bottom: 16px;
+      border-top: 1px solid gray;
+    }
+  }
+}
+
+.grid-wrapper {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  column-gap: 16px;
+  row-gap: 16px;
+  transition: 0.3s;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 768px) {
+  .grid-wrapper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 500px) {
+  .accordion {
+    &__header-text {
+      display: block;
+    }
+  }
+}

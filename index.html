@@ -1,14 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="./src/scss/style.scss" />
     <title>Vite + TS</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div x-data>
+      <div class="grid-wrapper">
+        <template x-for="i in 10">
+          <details
+            x-data="Accordion"
+            class="accordion__details"
+            x-bind:open="reactiveVal.open"
+          >
+            <summary
+              class="accordion__summary"
+              @click.prevent="clickHandler($refs.content)"
+            >
+              <div class="accordion__header-item">
+                <p class="accordion__header-text">ホーム</p>
+                <i class="accordion__header-icon fa-solid fa-house"></i>
+              </div>
+              <div class="accordion__header-item">
+                <p class="accordion__header-text">お気に入り</p>
+                <i class="fa-solid fa-heart"></i>
+              </div>
+              <div class="accordion__header-item">
+                <p class="accordion__header-text">お知らせ</p>
+                <i class="fa-solid fa-bell"></i>
+              </div>
+              <div class="accordion__header-item">
+                <p class="accordion__header-text">設定</p>
+                <i class="fa-solid fa-gear"></i>
+              </div>
+              <!-- アコーディオン見出し<span class="accordion__sub-header"
+                >(コンテナが500px以上で表示する)</span
+              > -->
+            </summary>
+            <div x-ref="content" class="accordion__content">
+              <div class="accordion__content__inner">
+                コンテンツ<br />コンテンツ<br />
+                コンテンツ<br />コンテンツ<br />
+                コンテンツ<br />コンテンツ<br />
+                コンテンツ<br />コンテンツ<br />
+                コンテンツ<br />コンテンツ<br />
+                <i class="fab fa-twitter"></i>
+                <i class="fa-solid fa-house"></i>
+              </div>
+            </div>
+          </details>
+        </template>
+      </div>
+    </div>
+
     <script type="module" src="/src/ts/main.ts"></script>
   </body>
 </html>
