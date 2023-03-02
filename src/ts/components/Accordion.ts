@@ -1,80 +1,75 @@
 import Alpine from "alpinejs";
+import { accordionItems } from "../mock/mockData";
+import AccordionAnimation from "../logic/AccordionAnimation";
+import { AccordionStore as Store } from "../logic/AccordionStore";
 
-// アニメーションの時間とイージング
-const animTiming = {
-  duration: 300,
-  easing: "ease-out",
-};
-// アコーディオンを閉じるときのキーフレーム
-const closingAnimKeyframes = (content: HTMLElement) => [
-  {
-    height: content.offsetHeight + "px",
-    opacity: 1,
-  },
-  {
-    height: 0,
-    opacity: 0,
-  },
-];
-// アコーディオンを開く時のキーフレーム
-const openingAnimKeyframes = (content: HTMLElement) => [
-  {
-    height: 0,
-    opacity: 0,
-  },
-  {
-    height: content.offsetHeight + "px",
-    opacity: 1,
-  },
-];
+export const accordion = () => {
+  // 初期化
+  const init = () => {
+    // LocalStorageにすでにデータがあれば、データを読み込む
+    Store.checkStoredData(accordionItems);
 
-export const Accordion = () => {
+    // ページロード前にアコーディオンの状態を登録
+    window.addEventListener("beforeunload", () => {
+      Store.setAccordionState(accordionItems);
+    });
+  };
+
+  init(); // 初期化
+
   return {
+    items: accordionItems,
     // リアクティブ変数
-    reactiveVal: Alpine.reactive({ running: false, open: false }),
+    reactiveVal: Alpine.reactive({ running: false }),
 
-    // アコーディオン開く
-    openAccordion(content: HTMLElement) {
-      const closingAnim = content.animate(
-        closingAnimKeyframes(content),
-        animTiming
-      );
+    // アコーディオン閉じる
+    closeAccordion(index: number, content: HTMLElement) {
+      // 閉じるアニメーション作成
+      const closingAnim = AccordionAnimation.createClosingAnimation(content);
+
       this.reactiveVal.running = true;
-      // アニメーションの完了後に
+
+      // アニメーションの完了後にstate変更
       closingAnim.onfinish = () => {
-        // open属性を取り除く
-        this.reactiveVal.open = false;
         this.reactiveVal.running = false;
+
+        // Storeの更新
+        this.items[index].isOpen = false;
+        Store.updateLocalStorageState(index, this.items[index].isOpen);
       };
     },
 
-    // アコーディオン閉じる
-    closeAccordion(content: HTMLElement) {
-      this.reactiveVal.open = true;
-      // 開くアニメーションを実行
-      const openingAnim = content.animate(
-        openingAnimKeyframes(content),
-        animTiming
-      );
+    // アコーディオンを開く
+    openAccordion(index: number, content: HTMLElement) {
+      // Storeの更新
+      this.items[index].isOpen = true;
+      Store.updateLocalStorageState(index, this.items[index].isOpen);
+
+      // 開くアニメーションを作成
+      const openingAnim = AccordionAnimation.createOpeningAnimation(content);
+
       this.reactiveVal.running = true;
-      // アニメーション完了後にアニメーション実行中用の値を取り除く
+
+      // アニメーション完了後にstate変更
       openingAnim.onfinish = () => {
         this.reactiveVal.running = false;
       };
     },
 
     // クリック後の処理
-    clickHandler(content: HTMLElement) {
+    toggleItem(index: number, content: HTMLElement) {
       // 連打防止
       if (this.reactiveVal.running) {
         return;
       }
+
       // アコーディオンが開いていたら閉じる
-      if (this.reactiveVal.open) {
-        return this.openAccordion(content);
+      if (this.items[index].isOpen) {
+        return this.closeAccordion(index, content);
       }
+
       // アコーディオンが閉じていたら開く
-      return this.closeAccordion(content);
+      return this.openAccordion(index, content);
     },
   };
 };

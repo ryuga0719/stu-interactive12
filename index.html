@@ -12,54 +12,57 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="./src/scss/style.scss" />
-    <title>Vite + TS</title>
+    <title>Cashed accordion</title>
   </head>
   <body>
     <div x-data>
-      <div class="grid-wrapper">
-        <template x-for="i in 10">
-          <details
-            x-data="Accordion"
-            class="accordion__details"
-            x-bind:open="reactiveVal.open"
-          >
+      <div class="grid-wrapper" x-data="accordion()">
+        <template x-for="(item, index) in items" :key="index">
+          <details class="accordion__details" :open="item.isOpen">
             <summary
               class="accordion__summary"
-              @click.prevent="clickHandler($refs.content)"
+              @click.prevent="toggleItem(index, $el.nextElementSibling)"
             >
-              <div class="accordion__header-item">
-                <p class="accordion__header-text">ホーム</p>
-                <i class="accordion__header-icon fa-solid fa-house"></i>
+              <div class="accordion__icons">
+                <div class="accordion__header-item">
+                  <i class="fa-solid fa-heart"></i>
+                  <p class="accordion__header-text" x-text="item.favorite"></p>
+                </div>
+                <div class="accordion__header-item">
+                  <i class="fa-solid fa-bell"></i>
+                  <p
+                    class="accordion__header-text"
+                    x-text="item.notification"
+                  ></p>
+                </div>
+                <div class="accordion__header-item">
+                  <i class="fa-sharp fa-solid fa-retweet"></i>
+                  <p class="accordion__header-text" x-text="item.retweet"></p>
+                </div>
+                <div class="accordion__header-item">
+                  <i class="fa-sharp fa-solid fa-comment"></i>
+                  <p class="accordion__header-text" x-text="item.comments"></p>
+                </div>
+                <div class="accordion__header-item">
+                  <i class="fa-solid fa-tag"></i>
+                  <p class="accordion__header-text" x-text="item.tag"></p>
+                </div>
               </div>
-              <div class="accordion__header-item">
-                <p class="accordion__header-text">お気に入り</p>
-                <i class="fa-solid fa-heart"></i>
-              </div>
-              <div class="accordion__header-item">
-                <p class="accordion__header-text">お知らせ</p>
-                <i class="fa-solid fa-bell"></i>
-              </div>
-              <div class="accordion__header-item">
-                <p class="accordion__header-text">設定</p>
-                <i class="fa-solid fa-gear"></i>
-              </div>
-              <!-- アコーディオン見出し<span class="accordion__sub-header"
-                >(コンテナが500px以上で表示する)</span
-              > -->
             </summary>
-            <div x-ref="content" class="accordion__content">
+            <div class="accordion__content" :id="`accordion_${index}`">
               <div class="accordion__content__inner">
-                コンテンツ<br />コンテンツ<br />
-                コンテンツ<br />コンテンツ<br />
-                コンテンツ<br />コンテンツ<br />
-                コンテンツ<br />コンテンツ<br />
-                コンテンツ<br />コンテンツ<br />
-                <i class="fab fa-twitter"></i>
-                <i class="fa-solid fa-house"></i>
+                <div class="accordion__link-wrapper">
+                  <a href="/next.html" class="accordion__link"
+                    >一旦次のページにいく&gt;</a
+                  ><br />
+                </div>
               </div>
             </div>
           </details>
         </template>
+      </div>
+      <div x-data="clearButton()">
+        <button @click="clear">Clear LocalStorage</button>
       </div>
     </div>
 

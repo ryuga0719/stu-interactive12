@@ -1,8 +1,10 @@
 import Alpine from "alpinejs";
-import { Accordion } from "./components/Accordion";
+import { accordion } from "./components/Accordion";
+import { clearButton } from "./components/ClearButton";
 
 document.addEventListener("alpine:init", () => {
-  Alpine.data("Accordion", Accordion);
+  Alpine.data("accordion", accordion);
+  Alpine.data("clearButton", clearButton);
 });
 
 document.addEventListener("DOMContentLoaded", () => {

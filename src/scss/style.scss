@@ -10,11 +10,14 @@
   }
   &__summary {
     display: flex;
-    justify-content: space-between;
     gap: 16px;
     padding: 16px;
     width: 100%;
     cursor: pointer;
+  }
+  &__icons {
+    display: flex;
+    gap: 16px;
   }
   &__header {
     &-item {
@@ -35,6 +38,10 @@
       padding-bottom: 16px;
       border-top: 1px solid gray;
     }
+  }
+  &__link {
+    color: blue;
+    text-decoration: underline;
   }
 }
 
