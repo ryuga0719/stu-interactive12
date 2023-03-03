@@ -9,14 +9,17 @@ interface StoredAccordionItem {
 
 export class AccordionStore {
   constructor() {}
+  // データを更新する
   static updateLocalStorageState(index: number, flg: boolean) {
     localStorage.setItem(`item_${index}_isOpen`, JSON.stringify(flg));
   }
 
+  // データをセットする
   static setAccordionState(data: StoredAccordionItem[]) {
     localStorage.setItem("accordionState", JSON.stringify(data));
   }
 
+  // LocalStorageにデータがあるか確認し、あれば読み込む
   static checkStoredData(data: StoredAccordionItem[]) {
     const storedState = localStorage.getItem("accordionState");
     if (!storedState) return;
@@ -27,6 +30,7 @@ export class AccordionStore {
     });
   }
 
+  // LocalStorageのデータを削除する
   static clearLocalStorage() {
     localStorage.clear();
     alert("正常にLocalStorageをクリアしました。");

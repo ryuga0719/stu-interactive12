@@ -11,9 +11,18 @@
   &__summary {
     display: flex;
     gap: 16px;
-    padding: 16px;
+    padding: 16px 0;
     width: 100%;
     cursor: pointer;
+    align-items: center;
+    justify-content: space-between;
+    transition: 0.3s;
+    &.isClose:hover {
+      background-color: rgba(springgreen, 0.1);
+    }
+    &.isOpen:hover {
+      background-color: rgba(red, 0.1);
+    }
   }
   &__icons {
     display: flex;
@@ -43,6 +52,17 @@
     color: blue;
     text-decoration: underline;
   }
+  &__status-icon {
+    background-color: black;
+    padding: 6px;
+    border-radius: 9999px;
+  }
+  &__open {
+    color: springgreen;
+  }
+  &__close {
+    color: red;
+  }
 }
 
 .grid-wrapper {
@@ -61,7 +81,7 @@
   }
 }
 
-@container (min-width: 500px) {
+@container (min-width: 450px) {
   .accordion {
     &__header-text {
       display: block;

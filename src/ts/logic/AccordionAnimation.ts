@@ -11,7 +11,7 @@ export default class AccordionAnimation {
   };
 
   // アコーディオンを閉じるときのキーフレーム
-  private closingAnimKeyframes = (content: HTMLElement) => [
+  private readonly closingAnimKeyframes = (content: HTMLElement) => [
     {
       height: content.offsetHeight + "px",
       opacity: 1,
@@ -22,7 +22,7 @@ export default class AccordionAnimation {
     },
   ];
   // アコーディオンを開く時のキーフレーム
-  private openingAnimKeyframes = (content: HTMLElement) => [
+  private readonly openingAnimKeyframes = (content: HTMLElement) => [
     {
       height: 0,
       opacity: 0,
