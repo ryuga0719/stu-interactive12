@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    
+    <title>Cashed accordion</title>
+    <script type="module" crossorigin src="./assets/js/index.js"></script>
+    <link rel="stylesheet" href="./assets/css/index.css">
+  </head>
+  <body>
+    <div x-data>
+      <div class="grid-wrapper" x-data="accordion()">
+        <template x-for="(item, index) in items" :key="index">
+          <details class="accordion__details" :open="item.isOpen">
+            <summary
+              class="accordion__summary"
+              :class="item.isOpen? 'isOpen' : 'isClose'"
+              @click.prevent="toggleItem(index, $el.nextElementSibling)"
+            >
+              <div class="accordion__icons">
+                <div class="accordion__header-item">
+                  <i class="fa-solid fa-heart"></i>
+                  <p class="accordion__header-text" x-text="item.favorite"></p>
+                </div>
+                <div class="accordion__header-item">
+                  <i class="fa-solid fa-bell"></i>
+                  <p
+                    class="accordion__header-text"
+                    x-text="item.notification"
+                  ></p>
+                </div>
+                <div class="accordion__header-item">
+                  <i class="fa-sharp fa-solid fa-retweet"></i>
+                  <p class="accordion__header-text" x-text="item.retweet"></p>
+                </div>
+                <div class="accordion__header-item">
+                  <i class="fa-sharp fa-solid fa-comment"></i>
+                  <p class="accordion__header-text" x-text="item.comments"></p>
+                </div>
+                <div class="accordion__header-item">
+                  <i class="fa-solid fa-tag"></i>
+                  <p class="accordion__header-text" x-text="item.tag"></p>
+                </div>
+              </div>
+              <div class="accordion__status-icon">
+                <span x-show="!item.isOpen" class="accordion__open">開</span>
+                <span x-show="item.isOpen" class="accordion__close">閉</span>
+              </div>
+            </summary>
+            <div class="accordion__content" :id="`accordion_${index}`">
+              <div class="accordion__content__inner">
+                <div class="accordion__link-wrapper">
+                  <a href="/next.html" class="accordion__link"
+                    >一旦次のページにいく&gt;</a
+                  ><br />
+                </div>
+              </div>
+            </div>
+          </details>
+        </template>
+      </div>
+      <div x-data="clearButton()">
+        <button @click="clear">Clear LocalStorage</button>
+      </div>
+    </div>
+
+    
+  </body>
+</html>
