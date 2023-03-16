@@ -1,4 +1,7 @@
-module.exports = {
+import path from "path";
+import cssnano from "cssnano";
+
+export default {
   lang: "ja-JP",
   base: "./",
   assetsDir: "./",
@@ -7,6 +10,7 @@ module.exports = {
     port: 8888, // 任意のポート番号を書く
   },
   build: {
+    minify: false,
     manifest: false,
     publicDir: "public",
     outDir: "docs",
@@ -27,6 +31,21 @@ module.exports = {
     },
   },
   css: {
+    postcss: {
+      plugins: [
+        cssnano({
+          preset: [
+            "default",
+            {
+              discardComments: { removeAll: true },
+              minifyFontValues: {
+                removeQuotes: false, // 引用符を除去しない
+              },
+            },
+          ],
+        }),
+      ],
+    },
     preprocessorOptions: {
       scss: {
         charset: false,

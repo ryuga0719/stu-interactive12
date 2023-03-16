@@ -1,5 +1,9 @@
 @use "./reboot";
 
+body {
+  font-family: "ヒラギノ丸ゴ ProN";
+}
+
 .accordion {
   &__details {
     width: 100%;
