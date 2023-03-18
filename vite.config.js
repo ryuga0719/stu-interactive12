@@ -1,5 +1,4 @@
-import path from "path";
-import cssnano from "cssnano";
+import { minify } from "terser";
 
 export default {
   lang: "ja-JP",
@@ -12,9 +11,8 @@ export default {
   build: {
     minify: false,
     manifest: false,
-    publicDir: "public",
-    outDir: "docs",
-    assetsDir: "assets",
+    outDir: "docs", // 出力先ディレクトリ
+    assetsDir: "./assets",
     rollupOptions: {
       output: {
         // ファイルの拡張子と同じディレクトリを作成してbuildする
@@ -31,25 +29,39 @@ export default {
     },
   },
   css: {
-    postcss: {
-      plugins: [
-        cssnano({
-          preset: [
-            "default",
-            {
-              discardComments: { removeAll: true },
-              minifyFontValues: {
-                removeQuotes: false, // 引用符を除去しない
-              },
-            },
-          ],
-        }),
-      ],
-    },
     preprocessorOptions: {
       scss: {
         charset: false,
       },
     },
   },
+  plugins: [
+    {
+      name: "terser",
+      apply: "build",
+      async generateBundle(_, bundle) {
+        for (const name in bundle) {
+          const file = bundle[name];
+          if (file.type === "chunk") {
+            // JavaScriptファイルを圧縮する
+            const result = await minify(file.code, {
+              format: {
+                comments: false,
+              },
+            });
+
+            // 圧縮されたコードを更新する
+            file.code = result.code;
+          }
+        }
+      },
+    },
+  ],
 };
+
+// Unicodeエスケープシーケンスの原因はViteでデフォルトで入っているpostcssのcssnanoによるminifyが原因
+// UnicodeエスケープシーケンスされるのはSCSS→CSSにトランスパイルした後、ビルド後のCSSをminifyされる過程で変換される
+// cssの圧縮は別でpostcss.config.jsを作成、cssnanoの設定をそこで書く。
+// 対応策として、build.minifyはfalseにし、minifyする処理は自分で書いて解決を図る
+// build.minifyをfalseにするとjsも圧縮されないため、カスタムプラグインを作成してminifyする必要がある
+// JSのminifyはデフォルトのesbuildのminifyからterserを使うので1%~2%ファイル容量が増えることが課題
