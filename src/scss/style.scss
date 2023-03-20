@@ -4,6 +4,14 @@ body {
   font-family: "ヒラギノ丸ゴ ProN";
 }
 
+.sample::before {
+  content: "日本語だよ";
+}
+
+ul {
+  list-style-type: "オリジナルマーカー";
+}
+
 .accordion {
   &__details {
     width: 100%;

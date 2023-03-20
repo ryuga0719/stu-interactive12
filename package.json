@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@types/alpinejs": "^3.7.1",
+    "esbuild": "^0.17.12",
     "rollup-plugin-terser": "^7.0.2",
     "terser": "^5.16.6",
     "typescript": "^4.9.3",

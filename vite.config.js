@@ -1,6 +1,7 @@
 import { minify } from "terser";
 import { splitVendorChunkPlugin } from "vite";
 import path from "path";
+import { transform } from "esbuild";
 
 export default {
   lang: "ja-JP",
@@ -38,18 +39,38 @@ export default {
   },
   plugins: [
     splitVendorChunkPlugin(),
+    // {
+    //   name: "terser",
+    //   apply: "build",
+    //   async generateBundle(_, bundle) {
+    //     for (const name in bundle) {
+    //       const file = bundle[name];
+    //       if (file.type === "chunk") {
+    //         // jsファイルを圧縮する
+    //         const result = await minify(file.code, {
+    //           format: {
+    //             comments: false,
+    //           },
+    //         });
+
+    //         // 圧縮されたコードを更新する
+    //         file.code = result.code;
+    //       }
+    //     }
+    //   },
+    // },
     {
-      name: "terser",
+      name: "esbuild-minify",
       apply: "build",
       async generateBundle(_, bundle) {
         for (const name in bundle) {
           const file = bundle[name];
           if (file.type === "chunk") {
-            // jsファイルを圧縮する
-            const result = await minify(file.code, {
-              format: {
-                comments: false,
-              },
+            // JavaScriptファイルを圧縮する
+            const result = await transform(file.code, {
+              minify: true,
+              format: "esm",
+              charset: "utf8",
             });
 
             // 圧縮されたコードを更新する
