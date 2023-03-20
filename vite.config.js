@@ -1,4 +1,6 @@
 import { minify } from "terser";
+import { splitVendorChunkPlugin } from "vite";
+import path from "path";
 
 export default {
   lang: "ja-JP",
@@ -11,11 +13,10 @@ export default {
   build: {
     minify: false,
     manifest: false,
-    outDir: "docs", // 出力先ディレクトリ
+    outDir: "docs",
     assetsDir: "./assets",
     rollupOptions: {
       output: {
-        // ファイルの拡張子と同じディレクトリを作成してbuildする
         assetFileNames: (assetInfo) => {
           let extType = assetInfo.name.split(".").at(1);
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
@@ -23,8 +24,8 @@ export default {
           }
           return `assets/${extType}/[name][extname]`;
         },
-        chunkFileNames: "assets/js/[name].js",
-        entryFileNames: "assets/js/[name].js",
+        chunkFileNames: "assets/js/vendor/[name]-[hash].js", // ビルド後のチャンクファイル名
+        entryFileNames: "assets/js/[name].js", // ビルド後のjsファイル名
       },
     },
   },
@@ -36,6 +37,7 @@ export default {
     },
   },
   plugins: [
+    splitVendorChunkPlugin(),
     {
       name: "terser",
       apply: "build",
@@ -43,7 +45,7 @@ export default {
         for (const name in bundle) {
           const file = bundle[name];
           if (file.type === "chunk") {
-            // JavaScriptファイルを圧縮する
+            // jsファイルを圧縮する
             const result = await minify(file.code, {
               format: {
                 comments: false,
@@ -57,6 +59,11 @@ export default {
       },
     },
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve("./src"),
+    },
+  },
 };
 
 // Unicodeエスケープシーケンスの原因はViteでデフォルトで入っているpostcssのcssnanoによるminifyが原因
